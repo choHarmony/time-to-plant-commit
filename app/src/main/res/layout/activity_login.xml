@@ -21,7 +21,7 @@
             app:lottie_autoPlay="true"
             app:lottie_loop="true"
             app:lottie_rawRes="@raw/grass_login"
-            android:paddingBottom="30dp"
+            android:layout_marginBottom="300dp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -35,9 +35,52 @@
             android:textSize="40sp"
             android:fontFamily="@font/jalnan"
             android:textColor="@color/gr_green3"
+            android:layout_marginTop="20dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/ani_logo" />
+
+        <TextView
+            android:id="@+id/text_intro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/intro_text"
+            android:textSize="17sp"
+            android:fontFamily="@font/jalnan"
+            android:textColor="@color/gr_green3"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_logo" />
+
+        <EditText
+            android:id="@+id/text_gitId"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:hint="@string/login_text"
+            android:background="@drawable/bg_id_edittext"
+            android:layout_marginStart="50dp"
+            android:layout_marginEnd="50dp"
+            android:layout_marginTop="40dp"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_intro" />
+
+        <Button
+            android:id="@+id/btn_login"
+            android:layout_width="130dp"
+            android:layout_height="60dp"
+            android:text="로그인"
+            android:textSize="20sp"
+            android:textColor="@color/gr_yellow"
+            android:background="@drawable/selector_btn_login"
+            android:fontFamily="@font/nanumgothicbold"
+            android:layout_marginTop="50dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_gitId" />
+
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

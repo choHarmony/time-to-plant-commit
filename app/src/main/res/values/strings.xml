@@ -2,4 +2,6 @@
     <string name="app_name">Gratify</string>
     <string name="app_name_kor">그래티파이</string>
     <string name="app_name_bar">Gra-tify</string>
+    <string name="login_text">깃허브 ID 입력</string>
+    <string name="intro_text">당신만의 깃허브 커밋 알리미</string>
 </resources>
