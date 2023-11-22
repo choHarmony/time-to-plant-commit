@@ -2,6 +2,7 @@ package com.example.gratify.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import com.example.gratify.R
 import com.example.gratify.databinding.ActivityLoginBinding
@@ -12,7 +13,12 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         val binding: ActivityLoginBinding = DataBindingUtil.setContentView(this,
         R.layout.activity_login)
-        binding.viewmodel = ViewModel()
+        binding.viewmodel = ViewModel(application)
+
 
     }
+
+
+
+
 }

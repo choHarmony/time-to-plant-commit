@@ -56,6 +56,7 @@
             android:id="@+id/text_gitId"
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:text="@{viewmodel.githubId}"
             android:hint="@string/login_text"
             android:background="@drawable/bg_id_edittext"
             android:layout_marginStart="50dp"
@@ -74,12 +75,14 @@
             android:text="로그인"
             android:textSize="20sp"
             android:textColor="@color/gr_yellow"
+            android:onClick="@{viewmodel::storeEncodedId}"
             android:background="@drawable/selector_btn_login"
             android:fontFamily="@font/nanumgothicbold"
             android:layout_marginTop="50dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/text_gitId" />
+
 
 
 
