@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace 'com.example.gratify'
-    compileSdk 32
+    compileSdk 34
 
     defaultConfig {
         applicationId "com.example.gratify"
@@ -33,6 +33,7 @@ android {
 }
 
 dependencies {
+    implementation 'com.airbnb.android:lottie:6.2.0'
 
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'

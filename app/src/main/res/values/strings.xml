@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Gratify</string>
+    <string name="app_name_kor">그래티파이</string>
+    <string name="app_name_bar">Gra-tify</string>
 </resources>
