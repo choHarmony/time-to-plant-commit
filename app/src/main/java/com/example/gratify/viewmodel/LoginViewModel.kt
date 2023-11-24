@@ -14,14 +14,21 @@ class LoginViewModel(private val githubIdSharedPreferences: EncryptedGithubIdSha
     val githubId = ObservableField<String>()
 
     fun loginBtnClicked(view: View) {
-        githubIdSharedPreferences.saveUserGithubId(githubId.get().toString())
 
-        val intent = Intent(view.context, MainActivity::class.java)
-        view.context.startActivity(intent)
-
-        if (view.context is Activity) {
-            (view.context as Activity).finish()
+        if (githubId.get() == null) {
+            Toast.makeText(view.context, "깃허브 아이디를 입력해주세요.", Toast.LENGTH_LONG).show()
         }
+        else {
+            githubIdSharedPreferences.saveUserGithubId(githubId.get().toString())
+
+            val intent = Intent(view.context, MainActivity::class.java)
+            view.context.startActivity(intent)
+
+            if (view.context is Activity) {
+                (view.context as Activity).finish()
+            }
+        }
+
     }
 
 
