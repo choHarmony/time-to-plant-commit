@@ -1,5 +1,6 @@
 package com.example.gratify.view
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.databinding.DataBindingUtil
@@ -21,8 +22,6 @@ class LoginActivity : AppCompatActivity() {
         val binding: ActivityLoginBinding = DataBindingUtil.setContentView(this,
             R.layout.activity_login)
         binding.loginvm = LoginViewModel(githubIdSharedPreferences)
-
-
 
     }
 

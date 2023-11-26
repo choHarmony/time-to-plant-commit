@@ -1,7 +1,9 @@
 package com.example.gratify.viewmodel
 
 import android.util.Log
+import androidx.databinding.ObservableField
 import androidx.lifecycle.ViewModel
+import com.example.gratify.model.EncryptedGithubIdSharedPreferences
 import com.example.gratify.model.GithubEventResponse
 import com.example.gratify.model.GithubEventService
 import okhttp3.OkHttpClient
@@ -11,8 +13,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class MainViewModel : ViewModel() {
-
+class MainViewModel() : ViewModel() {
 
 
     private val clientBuilder = OkHttpClient.Builder()

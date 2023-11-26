@@ -15,15 +15,15 @@
         tools:context=".view.MainActivity">
 
         <TextView
-            android:id="@+id/sample_text"
+            android:id="@+id/text_welcome"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text=""
-            android:textSize="10sp"
+            android:textSize="30sp"
+            android:fontFamily="@font/nanumgothicextrabold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            app:layout_constraintTop_toTopOf="parent" />
 
 
 

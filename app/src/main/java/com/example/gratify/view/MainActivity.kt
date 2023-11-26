@@ -14,8 +14,10 @@ import android.os.SystemClock
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.databinding.DataBindingUtil
+import androidx.security.crypto.EncryptedSharedPreferences
 import com.example.gratify.R
 import com.example.gratify.databinding.ActivityMainBinding
+import com.example.gratify.model.EncryptedGithubIdSharedPreferences
 import com.example.gratify.model.GithubEventResponse
 import com.example.gratify.model.GithubEventService
 import com.example.gratify.utils.AlarmReceiver
@@ -30,6 +32,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding: ActivityMainBinding = DataBindingUtil.setContentView(this,
@@ -37,9 +40,12 @@ class MainActivity : AppCompatActivity() {
         binding.mainvm = MainViewModel()
 
         sendNotification()
+
+        val userId = EncryptedGithubIdSharedPreferences(this).readUserGithubId()
+        binding.textWelcome.text = "$userId 님,\n오늘도 커밋하세요!"
     }
 
-    fun sendNotification() {
+    private fun sendNotification() {
         val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(this, AlarmReceiver::class.java)
 
