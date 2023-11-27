@@ -7,7 +7,8 @@ import com.example.gratify.model.EncryptedGithubIdSharedPreferences
 class SplashViewModel(private val githubIdSharedPreferences: EncryptedGithubIdSharedPreferences) : ViewModel() {
 
     fun isLoggedIn(): Boolean {
-        return githubIdSharedPreferences.readUserGithubId() != null
+        val userId = githubIdSharedPreferences.readUserGithubId()
+        return userId != "null"
     }
 
 

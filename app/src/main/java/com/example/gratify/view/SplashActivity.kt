@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.example.gratify.R
@@ -18,14 +19,16 @@ class SplashActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         val binding: ActivitySplashBinding = DataBindingUtil.setContentView(this,
             R.layout.activity_splash)
-        //binding.splashvm = SplashViewModel(EncryptedGithubIdSharedPreferences(applicationContext))
+        binding.splashvm = SplashViewModel(EncryptedGithubIdSharedPreferences(applicationContext))
 
         loadSplash()
+        Toast.makeText(this, SplashViewModel(EncryptedGithubIdSharedPreferences(applicationContext)).isLoggedIn().toString(), Toast.LENGTH_LONG).show()
 
     }
 
     private fun observeLoginState() {
-        if (SplashViewModel(EncryptedGithubIdSharedPreferences(applicationContext)).isLoggedIn()) {
+        val splashVm = SplashViewModel(EncryptedGithubIdSharedPreferences(applicationContext))
+        if (splashVm.isLoggedIn()) {
             startActivity(Intent(this, MainActivity::class.java))
         } else {
             startActivity(Intent(this, LoginActivity::class.java))
