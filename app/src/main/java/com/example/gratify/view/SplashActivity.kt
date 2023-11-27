@@ -17,8 +17,8 @@ class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding: ActivitySplashBinding = DataBindingUtil.setContentView(this,
-        R.layout.activity_splash)
-        binding.splashvm = SplashViewModel(EncryptedGithubIdSharedPreferences(applicationContext))
+            R.layout.activity_splash)
+        //binding.splashvm = SplashViewModel(EncryptedGithubIdSharedPreferences(applicationContext))
 
         loadSplash()
 
@@ -33,10 +33,10 @@ class SplashActivity : AppCompatActivity() {
     }
 
     private fun loadSplash() {
-        Handler(Looper.getMainLooper()).postDelayed({
-            observeLoginState()
-            finish()
-        }, 1800)
+        observeLoginState()
+        finish()
     }
+
+
 
 }
