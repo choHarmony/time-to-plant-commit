@@ -7,12 +7,17 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.PowerManager
 import android.os.SystemClock
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.style.ForegroundColorSpan
 import android.util.Log
 import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.security.crypto.EncryptedSharedPreferences
 import com.example.gratify.R
@@ -41,9 +46,35 @@ class MainActivity : AppCompatActivity() {
 
         sendNotification()
 
-        val userId = EncryptedGithubIdSharedPreferences(this).readUserGithubId()
-        binding.textWelcome.text = "$userId 님,\n오늘도 커밋하세요!"
+        changeIdTextColor()
+
+
     }
+
+    private fun changeIdTextColor() {
+        val binding: ActivityMainBinding = DataBindingUtil.setContentView(this,
+            R.layout.activity_main)
+
+        val userId = EncryptedGithubIdSharedPreferences(this).readUserGithubId()
+        val welcomeText = "$userId 님,\n오늘도 커밋하세요 \uD83C\uDF31"
+
+        val spannableString = SpannableString(welcomeText)
+        val startIndex = welcomeText.indexOf(userId)
+        val endIndex = startIndex + userId.length
+        val color = ContextCompat.getColor(this, R.color.gr_green3)
+
+        spannableString.setSpan(
+            ForegroundColorSpan(color),
+            startIndex,
+            endIndex,
+            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+
+        binding.textWelcome.text = spannableString
+    }
+
+
+
 
     private fun sendNotification() {
         val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
