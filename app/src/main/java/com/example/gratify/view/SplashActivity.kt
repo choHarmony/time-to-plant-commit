@@ -22,8 +22,6 @@ class SplashActivity : AppCompatActivity() {
         binding.splashvm = SplashViewModel(EncryptedGithubIdSharedPreferences(applicationContext))
 
         loadSplash()
-        Toast.makeText(this, SplashViewModel(EncryptedGithubIdSharedPreferences(applicationContext)).isLoggedIn().toString(), Toast.LENGTH_LONG).show()
-
     }
 
     private fun observeLoginState() {
