@@ -5,4 +5,8 @@
     <string name="login_text">깃허브 ID 입력</string>
     <string name="intro_text">당신만의 깃허브 커밋 알리미</string>
     <string name="welcome_sample_text">githubId 님,\n오늘도 커밋하세요🌱</string>
+    <string name="card_alarm_text">매일\n오후 8시에\n알림을 보내드려요</string>
+    <string name="card_continue_text">연속\n3일째\n잔디 심는 중</string>
+    <string name="farmer">👩🏻‍🌾</string>
+    <string name="clock">⏰</string>
 </resources>

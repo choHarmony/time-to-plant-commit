@@ -38,22 +38,23 @@ import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val binding: ActivityMainBinding = DataBindingUtil.setContentView(this,
-        R.layout.activity_main)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.mainvm = MainViewModel()
 
         sendNotification()
 
         changeIdTextColor()
+        changeTimeTextColor()
+        changeDayTextColor()
 
 
     }
 
     private fun changeIdTextColor() {
-        val binding: ActivityMainBinding = DataBindingUtil.setContentView(this,
-            R.layout.activity_main)
 
         val userId = EncryptedGithubIdSharedPreferences(this).readUserGithubId()
         val welcomeText = "$userId 님,\n오늘도 커밋하세요 \uD83C\uDF31"
@@ -71,6 +72,46 @@ class MainActivity : AppCompatActivity() {
         )
 
         binding.textWelcome.text = spannableString
+    }
+
+    private fun changeTimeTextColor() {
+
+        val time = "오후 8시" // 나중에 시간 저장 로컬 디비 만들면 아이디처럼 바꿔주기
+        val timeText = "매일\n오후 8시에\n알림을 보내드려요" // 나중엔 오후 8시 부분을 $time 이렇게!
+
+        val spannableString = SpannableString(timeText)
+        val startIndex = timeText.indexOf(time)
+        val endIndex = startIndex + time.length
+        val color = ContextCompat.getColor(this, R.color.gr_yellow)
+
+        spannableString.setSpan(
+            ForegroundColorSpan(color),
+            startIndex,
+            endIndex,
+            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+
+        binding.cardAlarmText.text = spannableString
+    }
+
+    private fun changeDayTextColor() {
+
+        val day = "3일째"
+        val dayText = "연속\n3일째\n잔디 심는 중"
+
+        val spannableString = SpannableString(dayText)
+        val startIndex = dayText.indexOf(day)
+        val endIndex = startIndex + day.length
+        val color = ContextCompat.getColor(this, R.color.gr_yellow)
+
+        spannableString.setSpan(
+            ForegroundColorSpan(color),
+            startIndex,
+            endIndex,
+            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+
+        binding.cardContinueText.text = spannableString
     }
 
 
