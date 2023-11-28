@@ -37,9 +37,9 @@ class SendNotification(private val context: Context) {
         )
 
         val builder = NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(R.drawable.icon_routimer_logo)
-            .setContentTitle("오늘은 커밋을 하지 않으셨군요!")
-            .setContentText("뭐라도 해보는 게 어떨까요?")
+            .setSmallIcon(R.drawable.gratify_grass_round_logo)
+            .setContentTitle("오늘은 커밋을 하지 않으셨네요!")
+            .setContentText("얼른 잔디 심으러 가요\uD83C\uDF31")
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)
             .setDefaults(NotificationCompat.DEFAULT_ALL)
