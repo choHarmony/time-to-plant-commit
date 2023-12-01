@@ -2,7 +2,9 @@ package com.example.gratify.viewmodel
 
 import android.app.TimePickerDialog
 import android.content.Context
+import android.content.res.Resources
 import android.util.Log
+import android.widget.TimePicker
 import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -78,6 +80,7 @@ class MainViewModel(val timeSharePref: TimeSharedPreferences) : ViewModel() {
             timeSharePref.getMin().toInt(),
             false
         )
+
         timePickerDialog.show()
     }
 

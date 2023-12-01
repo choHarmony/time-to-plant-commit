@@ -42,6 +42,7 @@ import java.util.*
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    var time = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,15 +55,28 @@ class MainActivity : AppCompatActivity() {
         sendNotification()
 
         changeIdTextColor()
+        setInitialTime()
         changeTimeTextColor()
         changeDayTextColor()
 
         mainViewModel.editTimeHour.observe(this, androidx.lifecycle.Observer { newTime ->
             Toast.makeText(this, "선택된 시간: $newTime", Toast.LENGTH_SHORT).show()
+            time = ""
+            if (newTime.toInt() > 12) {
+                time = "오후 ${newTime.toInt()-12}시"
+            } else if (newTime.toInt() == 12) {
+                time = "오후 12시"
+            } else {
+                time = "오전 ${newTime}시"
+            }
         })
 
         mainViewModel.editTimeMin.observe(this, androidx.lifecycle.Observer { newTime ->
             Toast.makeText(this, "선택된 분: $newTime", Toast.LENGTH_SHORT).show()
+            if (newTime.toInt() != 0) {
+                time += " ${newTime}분"
+            }
+            changeTimeTextColor()
         })
 
         binding.btnChangeTime.setOnClickListener {
@@ -93,8 +107,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun changeTimeTextColor() {
 
-        val time = "오후 8시" // 나중에 시간 저장 로컬 디비 만들면 아이디처럼 바꿔주기
-        val timeText = "매일\n오후 8시에\n알림을 보내드려요" // 나중엔 오후 8시 부분을 $time 이렇게!
+        val timeText = "매일\n${time}에\n알림을 보내드려요"
 
         val spannableString = SpannableString(timeText)
         val startIndex = timeText.indexOf(time)
@@ -109,6 +122,24 @@ class MainActivity : AppCompatActivity() {
         )
 
         binding.cardAlarmText.text = spannableString
+    }
+
+    private fun setInitialTime() {
+        var hour = TimeSharedPreferences(applicationContext).getHour().toInt()
+        var min = TimeSharedPreferences(applicationContext).getMin().toInt()
+
+        if (hour > 12) {
+            hour -= 12
+            time += "오후 ${hour}시"
+        } else if (hour == 12) {
+            time += "오후 12시"
+        } else {
+            time += "오전 ${hour}시"
+        }
+
+        if (min != 0) {
+            time += " ${min}분"
+        }
     }
 
     private fun changeDayTextColor() {
