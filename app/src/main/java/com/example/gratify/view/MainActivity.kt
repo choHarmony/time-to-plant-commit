@@ -16,6 +16,8 @@ import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.ForegroundColorSpan
 import android.util.Log
+import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
@@ -25,6 +27,7 @@ import com.example.gratify.databinding.ActivityMainBinding
 import com.example.gratify.model.EncryptedGithubIdSharedPreferences
 import com.example.gratify.model.GithubEventResponse
 import com.example.gratify.model.GithubEventService
+import com.example.gratify.model.TimeSharedPreferences
 import com.example.gratify.utils.AlarmReceiver
 import com.example.gratify.utils.SendNotification
 import com.example.gratify.viewmodel.MainViewModel
@@ -43,7 +46,10 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-        binding.mainvm = MainViewModel()
+        binding.mainvm = MainViewModel(TimeSharedPreferences(applicationContext))
+
+        val mainViewModel = MainViewModel(TimeSharedPreferences(applicationContext))
+        binding.lifecycleOwner = this
 
         sendNotification()
 
@@ -51,6 +57,17 @@ class MainActivity : AppCompatActivity() {
         changeTimeTextColor()
         changeDayTextColor()
 
+        mainViewModel.editTimeHour.observe(this, androidx.lifecycle.Observer { newTime ->
+            Toast.makeText(this, "선택된 시간: $newTime", Toast.LENGTH_SHORT).show()
+        })
+
+        mainViewModel.editTimeMin.observe(this, androidx.lifecycle.Observer { newTime ->
+            Toast.makeText(this, "선택된 분: $newTime", Toast.LENGTH_SHORT).show()
+        })
+
+        binding.btnChangeTime.setOnClickListener {
+            mainViewModel.showTimePickerDialog(this)
+        }
 
     }
 
@@ -123,13 +140,13 @@ class MainActivity : AppCompatActivity() {
 
         val calendar = Calendar.getInstance().apply {
             timeInMillis = System.currentTimeMillis()
-            set(Calendar.HOUR_OF_DAY, 21)
-            set(Calendar.MINUTE, 40)
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 20)
         }
 
-        if (calendar.timeInMillis <= System.currentTimeMillis()) {
-            calendar.add(Calendar.DAY_OF_MONTH, 1)
-        }
+//        if (calendar.timeInMillis <= System.currentTimeMillis()) {
+//            calendar.add(Calendar.DAY_OF_MONTH, 1)
+//        }
 
         val pendingIntent = PendingIntent.getBroadcast(
             this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
