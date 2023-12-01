@@ -43,11 +43,16 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     var time = ""
+    var notiHour = 0
+    var notiMin = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.mainvm = MainViewModel(TimeSharedPreferences(applicationContext))
+
+        notiHour = TimeSharedPreferences(applicationContext).getHour().toInt()
+        notiMin = TimeSharedPreferences(applicationContext).getMin().toInt()
 
         val mainViewModel = MainViewModel(TimeSharedPreferences(applicationContext))
         binding.lifecycleOwner = this
@@ -60,8 +65,8 @@ class MainActivity : AppCompatActivity() {
         changeDayTextColor()
 
         mainViewModel.editTimeHour.observe(this, androidx.lifecycle.Observer { newTime ->
-            Toast.makeText(this, "선택된 시간: $newTime", Toast.LENGTH_SHORT).show()
             time = ""
+            notiHour = newTime.toInt()
             if (newTime.toInt() > 12) {
                 time = "오후 ${newTime.toInt()-12}시"
             } else if (newTime.toInt() == 12) {
@@ -72,7 +77,7 @@ class MainActivity : AppCompatActivity() {
         })
 
         mainViewModel.editTimeMin.observe(this, androidx.lifecycle.Observer { newTime ->
-            Toast.makeText(this, "선택된 분: $newTime", Toast.LENGTH_SHORT).show()
+            notiMin = newTime.toInt()
             if (newTime.toInt() != 0) {
                 time += " ${newTime}분"
             }
@@ -171,8 +176,8 @@ class MainActivity : AppCompatActivity() {
 
         val calendar = Calendar.getInstance().apply {
             timeInMillis = System.currentTimeMillis()
-            set(Calendar.HOUR_OF_DAY, 0)
-            set(Calendar.MINUTE, 20)
+            set(Calendar.HOUR_OF_DAY, notiHour)
+            set(Calendar.MINUTE, notiMin)
         }
 
 //        if (calendar.timeInMillis <= System.currentTimeMillis()) {
