@@ -1,49 +1,23 @@
 package com.example.gratify.view
 
-import android.annotation.SuppressLint
 import android.app.AlarmManager
-import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
-import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.PowerManager
-import android.os.SystemClock
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.ForegroundColorSpan
-import android.util.Log
-import android.widget.Toast
-import androidx.activity.viewModels
-import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
-import androidx.security.crypto.EncryptedSharedPreferences
-import androidx.work.Configuration
-import androidx.work.ExistingPeriodicWorkPolicy
-import androidx.work.PeriodicWorkRequest
-import androidx.work.WorkManager
 import com.example.gratify.R
 import com.example.gratify.databinding.ActivityMainBinding
 import com.example.gratify.model.EncryptedGithubIdSharedPreferences
-import com.example.gratify.model.GithubEventResponse
-import com.example.gratify.model.GithubEventService
 import com.example.gratify.model.TimeSharedPreferences
 import com.example.gratify.utils.AlarmReceiver
-import com.example.gratify.utils.NotificationEventWorker
-import com.example.gratify.utils.SendNotification
 import com.example.gratify.viewmodel.MainViewModel
-import okhttp3.OkHttpClient
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import java.util.*
-import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
 
@@ -51,17 +25,20 @@ class MainActivity : AppCompatActivity() {
     var time = ""
     var notiHour = 0
     var notiMin = 0
-    var alert = false
+
+    companion object {
+        var alert = true
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-        binding.mainvm = MainViewModel(TimeSharedPreferences(applicationContext), EncryptedGithubIdSharedPreferences(applicationContext))
+        binding.mainvm = MainViewModel(TimeSharedPreferences(applicationContext))
 
         notiHour = TimeSharedPreferences(applicationContext).getHour().toInt()
         notiMin = TimeSharedPreferences(applicationContext).getMin().toInt()
 
-        val mainViewModel = MainViewModel(TimeSharedPreferences(applicationContext), EncryptedGithubIdSharedPreferences(applicationContext))
+        val mainViewModel = MainViewModel(TimeSharedPreferences(applicationContext))
         binding.lifecycleOwner = this
 
         changeIdTextColor()
@@ -69,6 +46,7 @@ class MainActivity : AppCompatActivity() {
         changeTimeTextColor()
         changeDayTextColor()
 
+        determineAlert()
         sendNotification()
 
 
@@ -96,6 +74,64 @@ class MainActivity : AppCompatActivity() {
         binding.btnChangeTime.setOnClickListener {
             mainViewModel.showTimePickerDialog(this)
         }
+
+    }
+
+
+    private fun determineAlert() {
+
+        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val intent = Intent(this, AlarmReceiver::class.java)
+
+        val calendar = Calendar.getInstance().apply {
+            timeInMillis = System.currentTimeMillis()
+            set(Calendar.HOUR_OF_DAY, notiHour)
+            set(Calendar.MINUTE, notiMin)
+        }
+
+        if (calendar.timeInMillis <= System.currentTimeMillis()) {
+            calendar.add(Calendar.DAY_OF_MONTH, 1)
+        }
+
+        val pendingIntent = PendingIntent.getBroadcast(
+            this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+
+        alarmManager.setRepeating(
+            AlarmManager.RTC_WAKEUP,
+            calendar.timeInMillis,
+            AlarmManager.INTERVAL_DAY,
+            pendingIntent
+        )
+
+    }
+
+
+
+
+    private fun sendNotification() {
+
+        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val intent = Intent(this, AlarmReceiver::class.java)
+
+        val calendar = Calendar.getInstance().apply {
+            timeInMillis = System.currentTimeMillis()
+            set(Calendar.HOUR_OF_DAY, notiHour)
+            set(Calendar.MINUTE, notiMin)
+        }
+
+        if (calendar.timeInMillis <= System.currentTimeMillis()) {
+            calendar.add(Calendar.DAY_OF_MONTH, 1)
+        }
+
+        val pendingIntent = PendingIntent.getBroadcast(
+            this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+
+        alarmManager.setRepeating(
+            AlarmManager.RTC_WAKEUP,
+            calendar.timeInMillis,
+            AlarmManager.INTERVAL_DAY,
+            pendingIntent
+        )
 
     }
 
@@ -176,34 +212,5 @@ class MainActivity : AppCompatActivity() {
         binding.cardContinueText.text = spannableString
     }
 
-
-
-
-    private fun sendNotification() {
-
-        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val intent = Intent(this, AlarmReceiver::class.java)
-
-        val calendar = Calendar.getInstance().apply {
-            timeInMillis = System.currentTimeMillis()
-            set(Calendar.HOUR_OF_DAY, notiHour)
-            set(Calendar.MINUTE, notiMin)
-        }
-
-        if (calendar.timeInMillis <= System.currentTimeMillis()) {
-            calendar.add(Calendar.DAY_OF_MONTH, 1)
-        }
-
-        val pendingIntent = PendingIntent.getBroadcast(
-            this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
-
-        alarmManager.setRepeating(
-            AlarmManager.RTC_WAKEUP,
-            calendar.timeInMillis,
-            AlarmManager.INTERVAL_DAY,
-            pendingIntent
-        )
-
-    }
 
 }
