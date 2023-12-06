@@ -32,10 +32,6 @@ class SendNotification(private val context: Context) {
         createNotiChannel()
     }
 
-    interface AlertCallback {
-        fun onAlertDetermined(alert: Boolean)
-    }
-
     private fun createNotiChannel() {
         val notificationChannel =
             NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH)
@@ -46,13 +42,25 @@ class SendNotification(private val context: Context) {
         notiManager.createNotificationChannel(notificationChannel)
     }
 
+    fun convertUtcToKoreanTime(utcTime: String): String {
+        val utcFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault())
+        utcFormat.timeZone = TimeZone.getTimeZone("UTC")
+
+        val koreanFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+        koreanFormat.timeZone = TimeZone.getTimeZone("Asia/Seoul")
+
+        return try {
+            val date = utcFormat.parse(utcTime)
+            koreanFormat.format(date)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            ""
+        }
+    }
+
     fun deliverNoti() {
 
-//        val mainViewModel = MainViewModel(
-//            TimeSharedPreferences(context),
-//            EncryptedGithubIdSharedPreferences(context)
-//        )
-//        mainViewModel.loadEvents(context)
+        determineNotiAlert()
 
         if (MainActivity.alert) {
             val intent = Intent(context, SendNotification::class.java)
@@ -102,7 +110,7 @@ class SendNotification(private val context: Context) {
 
     }
 
-    fun determineAlert(callback: AlertCallback) {
+    fun determineNotiAlert() {
         val clientBuilder = OkHttpClient.Builder()
 
         val retrofit = Retrofit.Builder()
@@ -121,7 +129,7 @@ class SendNotification(private val context: Context) {
             ) {
                 val responseData = response.body()
                 if (responseData != null) {
-                    Log.d("되냐?", "${responseData[0].type}, ${responseData[0].created_at}")
+                    Log.d("되냐?", "${responseData[0].type}, ${convertUtcToKoreanTime(responseData[0].created_at)}")
                     val currentDate = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault()).format(
                         Date()
                     )
@@ -129,16 +137,17 @@ class SendNotification(private val context: Context) {
                     val simpleDateOnly = simpleDate.format(Date())
 
                     for (index in responseData.indices) {
-                        val eventData = simpleDate.format(simpleDate.parse(responseData[index].created_at)!!)
-                        if (responseData[index].type == "PushEvent" && eventData == simpleDateOnly) {
+                        val eventDate = simpleDate.format(simpleDate.parse(responseData[index].created_at)!!)
+                        val eventDateKorean = convertUtcToKoreanTime(eventDate)
+                        if (responseData[index].type == "PushEvent" && eventDateKorean == simpleDateOnly) {
                             MainActivity.alert = true
-                            Toast.makeText(context, "오늘 커밋함 ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ", Toast.LENGTH_LONG).show()
+                            //Toast.makeText(context, "오늘 커밋함 ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ", Toast.LENGTH_LONG).show()
                             break
                         }
                     }
 
-                    callback.onAlertDetermined(MainActivity.alert)
                 }
+
             }
 
             override fun onFailure(call: Call<List<GithubEventResponse>>, t: Throwable) {

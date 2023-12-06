@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity() {
     var notiMin = 0
 
     companion object {
-        var alert = true
+        var alert = false
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,16 +39,13 @@ class MainActivity : AppCompatActivity() {
         notiMin = TimeSharedPreferences(applicationContext).getMin().toInt()
 
         val mainViewModel = MainViewModel(TimeSharedPreferences(applicationContext))
-        binding.lifecycleOwner = this
 
         changeIdTextColor()
         setInitialTime()
         changeTimeTextColor()
         changeDayTextColor()
 
-        determineAlert()
         sendNotification()
-
 
 
         mainViewModel.editTimeHour.observe(this, androidx.lifecycle.Observer { newTime ->
@@ -61,6 +58,8 @@ class MainActivity : AppCompatActivity() {
             } else {
                 time = "오전 ${newTime}시"
             }
+            changeTimeTextColor()
+            sendNotification()
         })
 
         mainViewModel.editTimeMin.observe(this, androidx.lifecycle.Observer { newTime ->
@@ -69,6 +68,7 @@ class MainActivity : AppCompatActivity() {
                 time += " ${newTime}분"
             }
             changeTimeTextColor()
+            sendNotification()
         })
 
         binding.btnChangeTime.setOnClickListener {
@@ -76,37 +76,6 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
-
-
-    private fun determineAlert() {
-
-        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val intent = Intent(this, AlarmReceiver::class.java)
-
-        val calendar = Calendar.getInstance().apply {
-            timeInMillis = System.currentTimeMillis()
-            set(Calendar.HOUR_OF_DAY, notiHour)
-            set(Calendar.MINUTE, notiMin)
-        }
-
-        if (calendar.timeInMillis <= System.currentTimeMillis()) {
-            calendar.add(Calendar.DAY_OF_MONTH, 1)
-        }
-
-        val pendingIntent = PendingIntent.getBroadcast(
-            this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
-
-        alarmManager.setRepeating(
-            AlarmManager.RTC_WAKEUP,
-            calendar.timeInMillis,
-            AlarmManager.INTERVAL_DAY,
-            pendingIntent
-        )
-
-    }
-
-
-
 
     private fun sendNotification() {
 
@@ -117,6 +86,7 @@ class MainActivity : AppCompatActivity() {
             timeInMillis = System.currentTimeMillis()
             set(Calendar.HOUR_OF_DAY, notiHour)
             set(Calendar.MINUTE, notiMin)
+            set(Calendar.SECOND, 0)
         }
 
         if (calendar.timeInMillis <= System.currentTimeMillis()) {
