@@ -15,6 +15,10 @@ import com.example.gratify.model.GithubEventService
 import com.example.gratify.model.TimeSharedPreferences
 import com.example.gratify.view.MainActivity
 import com.example.gratify.viewmodel.MainViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import retrofit2.Call
 import retrofit2.Callback
@@ -42,11 +46,11 @@ class SendNotification(private val context: Context) {
         notiManager.createNotificationChannel(notificationChannel)
     }
 
-    fun convertUtcToKoreanTime(utcTime: String): String {
+    fun convertUtcToKoreanTime(utcTime: String): String? {
         val utcFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault())
         utcFormat.timeZone = TimeZone.getTimeZone("UTC")
 
-        val koreanFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+        val koreanFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         koreanFormat.timeZone = TimeZone.getTimeZone("Asia/Seoul")
 
         return try {
@@ -54,7 +58,7 @@ class SendNotification(private val context: Context) {
             koreanFormat.format(date)
         } catch (e: Exception) {
             e.printStackTrace()
-            ""
+            e.printStackTrace().toString()
         }
     }
 
@@ -62,51 +66,29 @@ class SendNotification(private val context: Context) {
 
         determineNotiAlert()
 
-        if (MainActivity.alert) {
-            val intent = Intent(context, SendNotification::class.java)
+        val intent = Intent(context, SendNotification::class.java)
 
-            val pendingIntent = PendingIntent.getActivity(
-                context,
-                NOTIFICATION_ID,
-                intent,
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-            )
+        val pendingIntent = PendingIntent.getActivity(
+            context,
+            NOTIFICATION_ID,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
 
-            val builder = NotificationCompat.Builder(context, CHANNEL_ID)
-                .setSmallIcon(R.drawable.gratify_grass_round_logo)
-                .setContentTitle("오늘은 커밋을 하지 않으셨네요!")
-                .setContentText("얼른 잔디 심으러 가요\uD83C\uDF31")
-                .setContentIntent(pendingIntent)
-                .setAutoCancel(true)
-                .setDefaults(NotificationCompat.DEFAULT_ALL)
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setCategory(NotificationCompat.CATEGORY_ALARM)
+        val builder = NotificationCompat.Builder(context, CHANNEL_ID)
+            .setSmallIcon(R.drawable.gratify_grass_round_logo)
+            .setContentTitle("오늘은 커밋을 하지 않으셨네요!")
+            .setContentText("얼른 잔디 심으러 가요\uD83C\uDF31")
+            .setContentIntent(pendingIntent)
+            .setAutoCancel(true)
+            .setDefaults(NotificationCompat.DEFAULT_ALL)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setCategory(NotificationCompat.CATEGORY_ALARM)
 
-
+        // 여기만 if문 처리해줘야 함. 위에까지 다 if문으로 처리하면 커밋을 안 했어도 알림이 안 울려버림
+        if (alert) {
             notiManager.notify(NOTIFICATION_ID, builder.build())
         }
-
-//        val intent = Intent(context, SendNotification::class.java)
-//
-//        val pendingIntent = PendingIntent.getActivity(
-//            context,
-//            NOTIFICATION_ID,
-//            intent,
-//            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-//        )
-//
-//        val builder = NotificationCompat.Builder(context, CHANNEL_ID)
-//            .setSmallIcon(R.drawable.gratify_grass_round_logo)
-//            .setContentTitle("오늘은 커밋을 하지 않으셨네요!")
-//            .setContentText("얼른 잔디 심으러 가요\uD83C\uDF31")
-//            .setContentIntent(pendingIntent)
-//            .setAutoCancel(true)
-//            .setDefaults(NotificationCompat.DEFAULT_ALL)
-//            .setPriority(NotificationCompat.PRIORITY_HIGH)
-//            .setCategory(NotificationCompat.CATEGORY_ALARM)
-//
-//
-//        notiManager.notify(NOTIFICATION_ID, builder.build())
 
     }
 
@@ -137,12 +119,19 @@ class SendNotification(private val context: Context) {
                     val simpleDateOnly = simpleDate.format(Date())
 
                     for (index in responseData.indices) {
-                        val eventDate = simpleDate.format(simpleDate.parse(responseData[index].created_at)!!)
-                        val eventDateKorean = convertUtcToKoreanTime(eventDate)
+                        val utcEventDate = responseData[index].created_at
+                        val eventDateKorean = convertUtcToKoreanTime(utcEventDate)
+
+
                         if (responseData[index].type == "PushEvent" && eventDateKorean == simpleDateOnly) {
-                            MainActivity.alert = true
-                            //Toast.makeText(context, "오늘 커밋함 ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ", Toast.LENGTH_LONG).show()
+                            Log.d("되냐?", "${index}, ${responseData[0].type}, ${eventDateKorean}, $simpleDateOnly")
+                            alert = false
+                            Log.d("되냐?", "alert: $alert")
                             break
+
+                            // 이제 format 맞춰서 if문 진입하는 거까진 성공했는대
+                            // alert가 false로 바뀌지 않는 건지 아님 초기화가 되는 건지
+                            // 두 날짜가 똑같음에도 불구하고 알림이 울림 ㅠㅠ
                         }
                     }
 
@@ -162,6 +151,7 @@ class SendNotification(private val context: Context) {
         const val CHANNEL_ID = "channel_id"
         const val CHANNEL_NAME = "channel_name"
         const val NOTIFICATION_ID = 0
+        var alert = true
     }
 
 }

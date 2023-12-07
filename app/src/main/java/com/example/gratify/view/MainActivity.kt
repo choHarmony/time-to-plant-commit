@@ -26,10 +26,6 @@ class MainActivity : AppCompatActivity() {
     var notiHour = 0
     var notiMin = 0
 
-    companion object {
-        var alert = false
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
