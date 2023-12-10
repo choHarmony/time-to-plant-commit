@@ -42,10 +42,7 @@ class MainActivity : AppCompatActivity() {
         setInitialTime()
         changeTimeTextColor()
 
-        if (ContinueCommitDaySharedPreferences(applicationContext).getAlertedToday()) {
-            mainViewModel.loadCommitEvent(applicationContext)
-            ContinueCommitDaySharedPreferences(applicationContext).alertedToday(false)
-        }
+        mainViewModel.loadCommitEvent(applicationContext)
         changeDayTextColor(ContinueCommitDaySharedPreferences(applicationContext).getDay())
 
         sendNotification()

@@ -101,13 +101,13 @@ class MainViewModel(val timeSharePref: TimeSharedPreferences, val continueDayPre
                         val eventDateKorean = convertUtcToKoreanTime(utcEventDate)
 
                         if (responseData[index].type == "PushEvent" && eventDateKorean == simpleDateOnly) {
-                            val continueDay = continueDayPref.getDay().toInt() + 1
-                            continueDayPref.setDay(continueDay.toString())
+                            if (!continueDayPref.getAlertedToday()) {
+                                val continueDay = continueDayPref.getDay().toInt() + 1
+                                continueDayPref.setDay(continueDay.toString())
+                            }
+                            continueDayPref.alertedToday(true)
                             break
                         }
-//                        else if (eventDateKorean != simpleDateOnly) {
-//                            continueDayPref.setDay("0")
-//                        }
 
 
                     }

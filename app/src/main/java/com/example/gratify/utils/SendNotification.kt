@@ -88,6 +88,7 @@ class SendNotification(private val context: Context, val continueDayPref: Contin
             if (isAlert) {
                 notiManager.notify(NOTIFICATION_ID, builder.build())
                 continueDayPref.alertedToday(true)
+                continueDayPref.setDay("0")
             }
         }
 
@@ -131,6 +132,7 @@ class SendNotification(private val context: Context, val continueDayPref: Contin
                         if (responseData[index].type == "PushEvent" && eventDateKorean == simpleDateOnly) {
                             Log.d("되냐?", "${index}, ${responseData[0].type}, ${eventDateKorean}, $simpleDateOnly")
                             isAlert = false
+                            continueDayPref.alertedToday(false)
                             Log.d("되냐?", "alert: $isAlert")
                             break
 
