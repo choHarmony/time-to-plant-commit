@@ -9,10 +9,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import com.example.gratify.R
-import com.example.gratify.model.EncryptedGithubIdSharedPreferences
-import com.example.gratify.model.GithubEventResponse
-import com.example.gratify.model.GithubEventService
-import com.example.gratify.model.TimeSharedPreferences
+import com.example.gratify.model.*
 import com.example.gratify.view.MainActivity
 import com.example.gratify.viewmodel.MainViewModel
 import kotlinx.coroutines.Dispatchers
@@ -28,7 +25,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.text.SimpleDateFormat
 import java.util.*
 
-class SendNotification(private val context: Context) {
+class SendNotification(private val context: Context, val continueDayPref: ContinueCommitDaySharedPreferences) {
 
     private var notiManager: NotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
@@ -90,6 +87,7 @@ class SendNotification(private val context: Context) {
             Log.d("되냐?", "alert in deliverNoti before alert code: $isAlert")
             if (isAlert) {
                 notiManager.notify(NOTIFICATION_ID, builder.build())
+                continueDayPref.alertedToday(true)
             }
         }
 

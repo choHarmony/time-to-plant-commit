@@ -13,6 +13,7 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import com.example.gratify.R
 import com.example.gratify.databinding.ActivityMainBinding
+import com.example.gratify.model.ContinueCommitDaySharedPreferences
 import com.example.gratify.model.EncryptedGithubIdSharedPreferences
 import com.example.gratify.model.TimeSharedPreferences
 import com.example.gratify.utils.AlarmReceiver
@@ -29,17 +30,23 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-        binding.mainvm = MainViewModel(TimeSharedPreferences(applicationContext))
+        val mainViewModel = MainViewModel(TimeSharedPreferences(applicationContext), ContinueCommitDaySharedPreferences(applicationContext))
+        binding.mainvm = mainViewModel
 
         notiHour = TimeSharedPreferences(applicationContext).getHour().toInt()
         notiMin = TimeSharedPreferences(applicationContext).getMin().toInt()
 
-        val mainViewModel = MainViewModel(TimeSharedPreferences(applicationContext))
+        //val mainViewModel = MainViewModel(TimeSharedPreferences(applicationContext), ContinueCommitDaySharedPreferences(applicationContext))
 
         changeIdTextColor()
         setInitialTime()
         changeTimeTextColor()
-        changeDayTextColor()
+
+        if (ContinueCommitDaySharedPreferences(applicationContext).getAlertedToday()) {
+            mainViewModel.loadCommitEvent(applicationContext)
+            ContinueCommitDaySharedPreferences(applicationContext).alertedToday(false)
+        }
+        changeDayTextColor(ContinueCommitDaySharedPreferences(applicationContext).getDay())
 
         sendNotification()
 
@@ -158,10 +165,10 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun changeDayTextColor() {
+    private fun changeDayTextColor(continueDay: String) {
 
-        val day = "3일째"
-        val dayText = "연속\n3일째\n잔디 심는 중"
+        val day = "${continueDay}일째"
+        val dayText = "연속\n$day\n잔디 심는 중"
 
         val spannableString = SpannableString(dayText)
         val startIndex = dayText.indexOf(day)
