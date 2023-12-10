@@ -135,7 +135,7 @@ class SendNotification(private val context: Context) {
                             isAlert = false
                             Log.d("되냐?", "alert: $isAlert")
                             break
-                            
+
                         }
                     }
 
