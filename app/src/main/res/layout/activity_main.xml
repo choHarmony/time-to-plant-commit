@@ -40,6 +40,7 @@
             app:layout_constraintTop_toBottomOf="@+id/btn_setting" />
 
         <LinearLayout
+            android:id="@+id/linear"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -145,6 +146,21 @@
             </androidx.cardview.widget.CardView>
 
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/text_grass_farm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/grass_farm"
+            android:textSize="20sp"
+            android:textColor="@color/black"
+            android:fontFamily="@font/sans_bold"
+            android:textStyle="bold"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linear" />
+
 
 
 

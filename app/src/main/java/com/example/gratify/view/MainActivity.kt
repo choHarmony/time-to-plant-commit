@@ -39,6 +39,7 @@ class MainActivity : AppCompatActivity() {
         //val mainViewModel = MainViewModel(TimeSharedPreferences(applicationContext), ContinueCommitDaySharedPreferences(applicationContext))
 
         changeIdTextColor()
+        changeFarmIdTextColor()
         setInitialTime()
         changeTimeTextColor()
 
@@ -109,6 +110,7 @@ class MainActivity : AppCompatActivity() {
 
         val userId = EncryptedGithubIdSharedPreferences(this).readUserGithubId()
         val welcomeText = "$userId 님,\n오늘도 커밋하세요 \uD83C\uDF31"
+        val farmText = "\uD83D\uDE9C $userId 님네 잔디 농장"
 
         val spannableString = SpannableString(welcomeText)
         val startIndex = welcomeText.indexOf(userId)
@@ -123,6 +125,25 @@ class MainActivity : AppCompatActivity() {
         )
 
         binding.textWelcome.text = spannableString
+    }
+
+    private fun changeFarmIdTextColor() {
+        val userId = EncryptedGithubIdSharedPreferences(this).readUserGithubId()
+        val farmText = "\uD83D\uDE9C $userId 님의 잔디 농장"
+
+        val spannableString = SpannableString(farmText)
+        val startIndex = farmText.indexOf(userId)
+        val endIndex = startIndex + userId.length
+        val color = ContextCompat.getColor(this, R.color.gr_green3)
+
+        spannableString.setSpan(
+            ForegroundColorSpan(color),
+            startIndex,
+            endIndex,
+            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+
+        binding.textGrassFarm.text = spannableString
     }
 
     private fun changeTimeTextColor() {
