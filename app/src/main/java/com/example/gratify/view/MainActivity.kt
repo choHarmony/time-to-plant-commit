@@ -129,7 +129,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun changeFarmIdTextColor() {
         val userId = EncryptedGithubIdSharedPreferences(this).readUserGithubId()
-        val farmText = "\uD83D\uDE9C $userId 님의 잔디 농장"
+        val farmText = "\uD83D\uDE9C ${userId}네 잔디 농장"
 
         val spannableString = SpannableString(farmText)
         val startIndex = farmText.indexOf(userId)
