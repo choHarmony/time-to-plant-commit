@@ -4,13 +4,27 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
+import android.graphics.drawable.PictureDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.ForegroundColorSpan
+import android.util.Log
+import android.webkit.WebChromeClient
+import android.webkit.WebViewClient
+import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.request.target.Target.SIZE_ORIGINAL
 import com.example.gratify.R
 import com.example.gratify.databinding.ActivityMainBinding
 import com.example.gratify.model.ContinueCommitDaySharedPreferences
@@ -30,7 +44,10 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-        val mainViewModel = MainViewModel(TimeSharedPreferences(applicationContext), ContinueCommitDaySharedPreferences(applicationContext))
+        val mainViewModel = MainViewModel(
+            TimeSharedPreferences(applicationContext),
+            ContinueCommitDaySharedPreferences(applicationContext)
+        )
         binding.mainvm = mainViewModel
 
         notiHour = TimeSharedPreferences(applicationContext).getHour().toInt()
@@ -76,6 +93,9 @@ class MainActivity : AppCompatActivity() {
             mainViewModel.showTimePickerDialog(this)
         }
 
+
+
+
     }
 
     private fun sendNotification() {
@@ -110,7 +130,6 @@ class MainActivity : AppCompatActivity() {
 
         val userId = EncryptedGithubIdSharedPreferences(this).readUserGithubId()
         val welcomeText = "$userId 님,\n오늘도 커밋하세요 \uD83C\uDF31"
-        val farmText = "\uD83D\uDE9C $userId 님네 잔디 농장"
 
         val spannableString = SpannableString(welcomeText)
         val startIndex = welcomeText.indexOf(userId)
@@ -202,6 +221,8 @@ class MainActivity : AppCompatActivity() {
 
         binding.cardContinueText.text = spannableString
     }
+
+
 
 
 }
