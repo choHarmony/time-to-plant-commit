@@ -5,9 +5,6 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
-import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.Drawable
-import android.graphics.drawable.PictureDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.SpannableString
@@ -15,26 +12,18 @@ import android.text.Spanned
 import android.text.style.ForegroundColorSpan
 import android.util.Log
 import android.view.View
-import android.webkit.WebChromeClient
-import android.webkit.WebViewClient
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.DataSource
-import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.load.engine.GlideException
-import com.bumptech.glide.request.RequestListener
-import com.bumptech.glide.request.RequestOptions
-import com.bumptech.glide.request.target.Target.SIZE_ORIGINAL
 import com.example.gratify.R
 import com.example.gratify.databinding.ActivityMainBinding
 import com.example.gratify.model.ContinueCommitDaySharedPreferences
 import com.example.gratify.model.EncryptedGithubIdSharedPreferences
 import com.example.gratify.model.TimeSharedPreferences
 import com.example.gratify.utils.AlarmReceiver
+import com.example.gratify.utils.DeleteAlertedStoreReceiver
 import com.example.gratify.viewmodel.MainViewModel
 import java.util.*
 
@@ -68,7 +57,10 @@ class MainActivity : AppCompatActivity() {
         //mainViewModel.loadCommitEvent(applicationContext)
         changeDayTextColor(ContinueCommitDaySharedPreferences(applicationContext).getDay())
 
-        sendNotification()
+        initializeAlertedStore()
+        if (!ContinueCommitDaySharedPreferences(applicationContext).getAlertedToday()) {
+            sendNotification()
+        }
 
 
         mainViewModel.editTimeHour.observe(this, androidx.lifecycle.Observer { newTime ->
@@ -101,6 +93,32 @@ class MainActivity : AppCompatActivity() {
 
 
 
+    }
+
+    private fun initializeAlertedStore() {
+        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val intent = Intent(this, DeleteAlertedStoreReceiver::class.java)
+
+        val calendar = Calendar.getInstance().apply {
+            timeInMillis = System.currentTimeMillis()
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+        }
+
+        if (calendar.timeInMillis <= System.currentTimeMillis()) {
+            calendar.add(Calendar.DAY_OF_MONTH, 1)
+        }
+
+        val pendingIntent = PendingIntent.getBroadcast(
+            this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+
+        alarmManager.setRepeating(
+            AlarmManager.RTC_WAKEUP,
+            calendar.timeInMillis,
+            AlarmManager.INTERVAL_DAY,
+            pendingIntent
+        )
     }
 
     private fun setMyFarm() {
