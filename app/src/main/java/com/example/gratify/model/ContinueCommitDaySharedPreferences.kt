@@ -22,4 +22,12 @@ class ContinueCommitDaySharedPreferences(context: Context) {
         return pref.getString("changed_today", "").toBoolean()
     }
 
+    fun storeAlertedDay(day: Int) {
+        pref.edit().putInt("day_count", day).apply()
+    }
+
+    fun getAlertedDay(): Int {
+        return pref.getInt("day_count", 0)
+    }
+
 }

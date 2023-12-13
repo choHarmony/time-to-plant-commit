@@ -13,8 +13,10 @@ import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.ForegroundColorSpan
 import android.util.Log
+import android.view.View
 import android.webkit.WebChromeClient
 import android.webkit.WebViewClient
+import android.widget.FrameLayout
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
@@ -59,6 +61,7 @@ class MainActivity : AppCompatActivity() {
         changeFarmIdTextColor()
         setInitialTime()
         changeTimeTextColor()
+        setMyFarm()
 
         mainViewModel.loadCommitEvent(applicationContext)
         changeDayTextColor(ContinueCommitDaySharedPreferences(applicationContext).getDay())
@@ -95,6 +98,27 @@ class MainActivity : AppCompatActivity() {
 
 
 
+
+    }
+
+    private fun setMyFarm() {
+        val countPref = ContinueCommitDaySharedPreferences(applicationContext)
+        val alertedDay = countPref.getAlertedDay()
+
+        for (dayIndex in 0 until alertedDay) {
+
+            val farmViewId = resources.getIdentifier("farm_$dayIndex", "id", packageName)
+            val grassViewId = resources.getIdentifier("grass_${dayIndex}", "id", packageName)
+
+            val farmView = findViewById<FrameLayout>(farmViewId)
+            val grassView = findViewById<ImageView>(grassViewId)
+
+            val grassName = resources.getIdentifier("R.drawable.farm_${dayIndex}", "id", packageName)
+
+            farmView?.visibility = View.VISIBLE
+            grassView?.setImageResource(grassName)
+
+        }
 
     }
 

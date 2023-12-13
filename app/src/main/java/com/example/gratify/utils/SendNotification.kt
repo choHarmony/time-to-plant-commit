@@ -89,6 +89,8 @@ class SendNotification(private val context: Context, val continueDayPref: Contin
                 notiManager.notify(NOTIFICATION_ID, builder.build())
                 continueDayPref.alertedToday(true)
                 continueDayPref.setDay("0")
+                val count = continueDayPref.getAlertedDay()
+                continueDayPref.storeAlertedDay(count+1)
             }
         }
 
