@@ -132,10 +132,13 @@ class SendNotification(private val context: Context, val continueDayPref: Contin
                         if (responseData[index].type == "PushEvent" && eventDateKorean == simpleDateOnly) {
                             Log.d("되냐?", "${index}, ${responseData[0].type}, ${eventDateKorean}, $simpleDateOnly")
                             isAlert = false
-                            val continueDay = continueDayPref.getDay().toInt() + 1
-                            continueDayPref.setDay(continueDay.toString())
-                            val count = continueDayPref.getAlertedDay()
-                            continueDayPref.storeAlertedDay(count+1)
+                            if (!continueDayPref.getAlertedToday()) {
+                                val continueDay = continueDayPref.getDay().toInt() + 1
+                                continueDayPref.setDay(continueDay.toString())
+                                val count = continueDayPref.getAlertedDay()
+                                continueDayPref.storeAlertedDay(count+1)
+                            }
+                            continueDayPref.alertedToday(true)
                             Log.d("되냐?", "alert: $isAlert")
                             break
 

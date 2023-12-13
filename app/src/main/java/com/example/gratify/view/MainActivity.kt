@@ -15,6 +15,7 @@ import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import com.example.gratify.R
@@ -56,6 +57,7 @@ class MainActivity : AppCompatActivity() {
 
         //mainViewModel.loadCommitEvent(applicationContext)
         changeDayTextColor(ContinueCommitDaySharedPreferences(applicationContext).getDay())
+        Toast.makeText(this, ContinueCommitDaySharedPreferences(applicationContext).getAlertedToday().toString(), Toast.LENGTH_LONG).show()
 
         initializeAlertedStore()
         if (!ContinueCommitDaySharedPreferences(applicationContext).getAlertedToday()) {
@@ -74,7 +76,9 @@ class MainActivity : AppCompatActivity() {
                 time = "오전 ${newTime}시"
             }
             changeTimeTextColor()
-            sendNotification()
+            if (!ContinueCommitDaySharedPreferences(applicationContext).getAlertedToday()) {
+                sendNotification()
+            }
         })
 
         mainViewModel.editTimeMin.observe(this, androidx.lifecycle.Observer { newTime ->
@@ -83,7 +87,9 @@ class MainActivity : AppCompatActivity() {
                 time += " ${newTime}분"
             }
             changeTimeTextColor()
-            sendNotification()
+            if (!ContinueCommitDaySharedPreferences(applicationContext).getAlertedToday()) {
+                sendNotification()
+            }
         })
 
         binding.btnChangeTime.setOnClickListener {
@@ -111,7 +117,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         val pendingIntent = PendingIntent.getBroadcast(
-            this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+            this, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT)
 
         alarmManager.setRepeating(
             AlarmManager.RTC_WAKEUP,
