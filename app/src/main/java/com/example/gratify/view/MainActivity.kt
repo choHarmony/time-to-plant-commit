@@ -60,6 +60,7 @@ class MainActivity : AppCompatActivity() {
         Toast.makeText(this, ContinueCommitDaySharedPreferences(applicationContext).getAlertedToday().toString(), Toast.LENGTH_LONG).show()
 
         initializeAlertedStore()
+        initializeCountStore()
         if (!ContinueCommitDaySharedPreferences(applicationContext).getAlertedToday()) {
             sendNotification()
         }
@@ -101,6 +102,34 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    private fun initializeCountStore() {
+        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val intent = Intent(this, DeleteAlertedStoreReceiver::class.java)
+
+        val calendar = Calendar.getInstance().apply {
+            timeInMillis = System.currentTimeMillis()
+            set(Calendar.DAY_OF_MONTH, Calendar.MONDAY)
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+        }
+
+        if (calendar.timeInMillis <= System.currentTimeMillis()) {
+            calendar.add(Calendar.DAY_OF_MONTH, 1)
+        }
+
+        val pendingIntent = PendingIntent.getBroadcast(
+            this, 2, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+
+        alarmManager.setRepeating(
+            AlarmManager.RTC_WAKEUP,
+            calendar.timeInMillis,
+            AlarmManager.INTERVAL_DAY,
+            pendingIntent
+        )
+    }
+
+
     private fun initializeAlertedStore() {
         val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(this, DeleteAlertedStoreReceiver::class.java)
@@ -126,6 +155,7 @@ class MainActivity : AppCompatActivity() {
             pendingIntent
         )
     }
+
 
     private fun setMyFarm() {
         val countPref = ContinueCommitDaySharedPreferences(applicationContext)
