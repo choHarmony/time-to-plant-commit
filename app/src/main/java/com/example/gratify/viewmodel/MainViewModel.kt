@@ -100,12 +100,15 @@ class MainViewModel(val timeSharePref: TimeSharedPreferences, val continueDayPre
                         val utcEventDate = responseData[index].created_at
                         val eventDateKorean = convertUtcToKoreanTime(utcEventDate)
 
+                        // 메인 뷰에 있는 연속 일수나 잔디 농장 변경을 위한 부분
                         if (responseData[index].type == "PushEvent" && eventDateKorean == simpleDateOnly) {
                             if (!continueDayPref.getAlertedToday()) {
+                                // 알림이 울렸을 경우, 연속 일수와 잔디 농장 변경을 위한 pref에 변화
                                 val continueDay = continueDayPref.getDay().toInt() + 1
                                 continueDayPref.setDay(continueDay.toString())
+                                val count = continueDayPref.getAlertedDay()
+                                continueDayPref.storeAlertedDay(count+1)
                             }
-                            continueDayPref.alertedToday(true)
                             break
                         }
 

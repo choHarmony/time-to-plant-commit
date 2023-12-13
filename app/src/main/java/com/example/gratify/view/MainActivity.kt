@@ -4,6 +4,7 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.PictureDrawable
@@ -18,6 +19,7 @@ import android.webkit.WebChromeClient
 import android.webkit.WebViewClient
 import android.widget.FrameLayout
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import com.bumptech.glide.Glide
@@ -63,7 +65,7 @@ class MainActivity : AppCompatActivity() {
         changeTimeTextColor()
         setMyFarm()
 
-        mainViewModel.loadCommitEvent(applicationContext)
+        //mainViewModel.loadCommitEvent(applicationContext)
         changeDayTextColor(ContinueCommitDaySharedPreferences(applicationContext).getDay())
 
         sendNotification()
@@ -107,16 +109,28 @@ class MainActivity : AppCompatActivity() {
 
         for (dayIndex in 0 until alertedDay) {
 
-            val farmViewId = resources.getIdentifier("farm_$dayIndex", "id", packageName)
+            val farmViewId = resources.getIdentifier("farm_${dayIndex}", "id", packageName)
             val grassViewId = resources.getIdentifier("grass_${dayIndex}", "id", packageName)
+            val textViewId = resources.getIdentifier("complete_text", "id", packageName)
 
             val farmView = findViewById<FrameLayout>(farmViewId)
             val grassView = findViewById<ImageView>(grassViewId)
+            val txtView = findViewById<TextView>(textViewId)
 
-            val grassName = resources.getIdentifier("R.drawable.farm_${dayIndex}", "id", packageName)
+            val grassName = resources.getIdentifier("farm_${dayIndex+1}", "drawable", packageName)
+            Log.d("namename", grassName.toString())
+            Log.d("namename", farmViewId.toString())
 
-            farmView?.visibility = View.VISIBLE
+            farmView?.setBackgroundResource(R.drawable.bg_btn_round_green3)
+            grassView?.visibility = View.VISIBLE
             grassView?.setImageResource(grassName)
+
+            if (dayIndex >= 6) {
+                txtView?.visibility = View.VISIBLE
+                findViewById<FrameLayout>(R.id.farm_7).setBackgroundColor(Color.parseColor("#F3F3F3"))
+                txtView.setTextColor(Color.parseColor("#F8DDA9"))
+            }
+
 
         }
 
