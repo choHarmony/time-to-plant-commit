@@ -398,6 +398,66 @@
 
         </GridLayout>
 
+        <TextView
+            android:id="@+id/text_github"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/go_to_farm"
+            android:textSize="20sp"
+            android:textColor="@color/black"
+            android:fontFamily="@font/sans_bold"
+            android:textStyle="bold"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/grass_farm" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_github"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn_show_farm"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/go_to_chart"
+                android:fontFamily="@font/sans_bold"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:layout_weight="1"
+                android:layout_marginEnd="5dp"
+                android:background="@drawable/bg_btn_round_green3"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/text_github" />
+
+            <Button
+                android:id="@+id/btn_show_github"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/go_to_github"
+                android:layout_weight="1"
+                android:fontFamily="@font/sans_bold"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:layout_marginStart="5dp"
+                android:background="@drawable/bg_btn_round_green3"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/text_github" />
+
+
+
+        </LinearLayout>
+
+
+
 
 
 

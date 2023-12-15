@@ -126,5 +126,9 @@ class MainViewModel(val timeSharePref: TimeSharedPreferences, val continueDayPre
         })
     }
 
+    fun goToFarm() {
+
+    }
+
 
 }

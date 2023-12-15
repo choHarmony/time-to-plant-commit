@@ -9,5 +9,8 @@
     <string name="card_continue_text">연속\n3일째\n잔디 심는 중</string>
     <string name="farmer">👩🏻‍🌾</string>
     <string name="clock">⏰</string>
-    <string name="grass_farm">🚜 githubId네 잔디 농장</string>
+    <string name="grass_farm">🚜 이번 주 잔디 성장 현황</string>
+    <string name="go_to_farm">🔗 githubId네 잔디 농장</string>
+    <string name="go_to_chart">🏕️\n잔디농장 가기</string>
+    <string name="go_to_github">💻\n깃허브 가기</string>
 </resources>

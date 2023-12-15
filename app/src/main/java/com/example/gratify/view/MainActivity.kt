@@ -131,6 +131,7 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun initializeAlertedStore() {
+
         val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(this, DeleteAlertedStoreReceiver::class.java)
 
@@ -222,11 +223,16 @@ class MainActivity : AppCompatActivity() {
 
         val userId = EncryptedGithubIdSharedPreferences(this).readUserGithubId()
         val welcomeText = "$userId 님,\n오늘도 커밋하세요 \uD83C\uDF31"
+        val goText = "\uD83D\uDD17 ${userId}네 잔디 농장"
 
         val spannableString = SpannableString(welcomeText)
         val startIndex = welcomeText.indexOf(userId)
         val endIndex = startIndex + userId.length
         val color = ContextCompat.getColor(this, R.color.gr_green3)
+
+        val spannableStr = SpannableString(goText)
+        val stIndex = goText.indexOf(userId)
+        val endIdx = stIndex + userId.length
 
         spannableString.setSpan(
             ForegroundColorSpan(color),
@@ -235,12 +241,21 @@ class MainActivity : AppCompatActivity() {
             Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
         )
 
+        spannableStr.setSpan(
+            ForegroundColorSpan(color),
+            stIndex,
+            endIdx,
+            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+
         binding.textWelcome.text = spannableString
+        binding.textGithub.text = spannableStr
     }
+
 
     private fun changeFarmIdTextColor() {
         val userId = EncryptedGithubIdSharedPreferences(this).readUserGithubId()
-        val farmText = "\uD83D\uDE9C ${userId}네 잔디 농장"
+        val farmText = "\uD83D\uDE9C ${userId}네 이번 주 잔디 현황"
 
         val spannableString = SpannableString(farmText)
         val startIndex = farmText.indexOf(userId)
@@ -254,7 +269,7 @@ class MainActivity : AppCompatActivity() {
             Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
         )
 
-        binding.textGrassFarm.text = spannableString
+        //binding.textGrassFarm.text = spannableString
     }
 
     private fun changeTimeTextColor() {
