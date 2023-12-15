@@ -2,8 +2,11 @@ package com.example.gratify.viewmodel
 
 import android.app.TimePickerDialog
 import android.content.Context
+import android.content.Intent
 import android.content.res.Resources
+import android.net.Uri
 import android.util.Log
+import android.view.View
 import android.widget.TimePicker
 import android.widget.Toast
 import androidx.databinding.ObservableField
@@ -126,8 +129,20 @@ class MainViewModel(val timeSharePref: TimeSharedPreferences, val continueDayPre
         })
     }
 
-    fun goToFarm() {
+    fun goToFarm(view: View) {
+        val userId = EncryptedGithubIdSharedPreferences(view.context).readUserGithubId()
+        val url = "https://ghchart.rshah.org/${userId}"
 
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+        view.context.startActivity(intent)
+    }
+
+    fun goToGithub(view: View) {
+        val userId = EncryptedGithubIdSharedPreferences(view.context).readUserGithubId()
+        val url = "https://github.com/${userId}"
+
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+        view.context.startActivity(intent)
     }
 
 

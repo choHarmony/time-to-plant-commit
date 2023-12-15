@@ -57,7 +57,7 @@ class MainActivity : AppCompatActivity() {
 
         //mainViewModel.loadCommitEvent(applicationContext)
         changeDayTextColor(ContinueCommitDaySharedPreferences(applicationContext).getDay())
-        Toast.makeText(this, ContinueCommitDaySharedPreferences(applicationContext).getAlertedToday().toString(), Toast.LENGTH_LONG).show()
+        //Toast.makeText(this, ContinueCommitDaySharedPreferences(applicationContext).getAlertedToday().toString(), Toast.LENGTH_LONG).show()
 
         initializeAlertedStore()
         initializeCountStore()
@@ -101,6 +101,7 @@ class MainActivity : AppCompatActivity() {
 
 
     }
+
 
     private fun initializeCountStore() {
         val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
