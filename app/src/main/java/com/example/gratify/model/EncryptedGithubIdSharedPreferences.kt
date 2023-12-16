@@ -23,6 +23,10 @@ class EncryptedGithubIdSharedPreferences(context: Context) {
         idStorage.edit().putString("userId", userId).apply()
     }
 
+    fun clearUserGithubId() {
+        idStorage.edit().putString("userId", null).apply()
+    }
+
     fun readUserGithubId(): String {
         return idStorage.getString("userId", null).toString()
     }

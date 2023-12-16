@@ -57,22 +57,6 @@ class MainViewModel(val timeSharePref: TimeSharedPreferences, val continueDayPre
         timePickerDialog.show()
     }
 
-    fun convertUtcToKoreanTime(utcTime: String): String? {
-        val utcFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault())
-        utcFormat.timeZone = TimeZone.getTimeZone("UTC")
-
-        val koreanFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-        koreanFormat.timeZone = TimeZone.getTimeZone("Asia/Seoul")
-
-        return try {
-            val date = utcFormat.parse(utcTime)
-            koreanFormat.format(date)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            e.printStackTrace().toString()
-        }
-    }
-
 
     fun goToFarm(view: View) {
         val userId = EncryptedGithubIdSharedPreferences(view.context).readUserGithubId()
