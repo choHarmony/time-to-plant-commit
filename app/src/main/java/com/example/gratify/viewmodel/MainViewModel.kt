@@ -15,6 +15,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.gratify.model.*
 import com.example.gratify.view.MainActivity
+import com.example.gratify.view.SettingActivity
 import okhttp3.OkHttpClient
 import retrofit2.Call
 import retrofit2.Callback
@@ -73,62 +74,6 @@ class MainViewModel(val timeSharePref: TimeSharedPreferences, val continueDayPre
     }
 
 
-    fun loadCommitEvent(context: Context) {
-        val clientBuilder = OkHttpClient.Builder()
-
-        val retrofit = Retrofit.Builder()
-            .baseUrl("https://api.github.com/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .client(clientBuilder.build())
-            .build()
-
-        val retrofitService: GithubEventService = retrofit.create(GithubEventService::class.java)
-
-        retrofitService.getUserEvents(EncryptedGithubIdSharedPreferences(context).readUserGithubId()).enqueue(object:
-            Callback<List<GithubEventResponse>> {
-            override fun onResponse(
-                call: Call<List<GithubEventResponse>>,
-                response: Response<List<GithubEventResponse>>
-            ) {
-                val responseData = response.body()
-                if (responseData != null) {
-                    val currentDate = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault()).format(
-                        Date()
-                    )
-                    val simpleDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-                    val simpleDateOnly = simpleDate.format(Date())
-
-                    for (index in responseData.indices) {
-
-                        val utcEventDate = responseData[index].created_at
-                        val eventDateKorean = convertUtcToKoreanTime(utcEventDate)
-
-                        // 메인 뷰에 있는 연속 일수나 잔디 농장 변경을 위한 부분
-                        if (responseData[index].type == "PushEvent" && eventDateKorean == simpleDateOnly) {
-                            if (!continueDayPref.getAlertedToday()) {
-                                // 알림이 울렸을 경우, 연속 일수와 잔디 농장 변경을 위한 pref에 변화
-                                val continueDay = continueDayPref.getDay().toInt() + 1
-                                continueDayPref.setDay(continueDay.toString())
-                                val count = continueDayPref.getAlertedDay()
-                                continueDayPref.storeAlertedDay(count+1)
-                            }
-                            break
-                        }
-
-
-                    }
-
-                }
-
-            }
-
-            override fun onFailure(call: Call<List<GithubEventResponse>>, t: Throwable) {
-                Log.d("되냐?_2", t.message.toString())
-            }
-
-        })
-    }
-
     fun goToFarm(view: View) {
         val userId = EncryptedGithubIdSharedPreferences(view.context).readUserGithubId()
         val url = "https://ghchart.rshah.org/${userId}"
@@ -142,6 +87,12 @@ class MainViewModel(val timeSharePref: TimeSharedPreferences, val continueDayPre
         val url = "https://github.com/${userId}"
 
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+        view.context.startActivity(intent)
+    }
+
+
+    fun openSetting(view: View) {
+        val intent = Intent(view.context, SettingActivity::class.java)
         view.context.startActivity(intent)
     }
 
