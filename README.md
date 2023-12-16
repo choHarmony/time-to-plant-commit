@@ -1,5 +1,5 @@
 <img src="https://github.com/choHarmony/time-to-plant-commit/assets/74913340/973aa56f-4c6b-4d2e-abf7-f5041ab3587f"
-  width="100" height="100">   
+  width="150" height="150">   
 ## 🌿그래티파이 (Gra-tify)🌿   
 ### ⏰ Time to Plant Grass!   
 > 정신 없이 하루를 보내다보면 깃허브에 잔디를 심는 일을 잊곤 해요.   
