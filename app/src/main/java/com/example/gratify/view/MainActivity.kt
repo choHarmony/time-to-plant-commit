@@ -18,6 +18,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
+import com.bumptech.glide.Glide
 import com.example.gratify.R
 import com.example.gratify.databinding.ActivityMainBinding
 import com.example.gratify.model.ContinueCommitDaySharedPreferences
@@ -64,7 +65,6 @@ class MainActivity : AppCompatActivity() {
         if (!ContinueCommitDaySharedPreferences(applicationContext).getAlertedToday()) {
             sendNotification()
         }
-
 
         mainViewModel.editTimeHour.observe(this, androidx.lifecycle.Observer { newTime ->
             time = ""
