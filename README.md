@@ -52,4 +52,4 @@ Gratify는 '기쁘게 하다'는 뜻을 가진 단어기도 합니다.
 </br>
 
 ### 💻 소개 페이지   
-[🌿 그래티파이 소개 페이지](https://daisy-taste-d2e.notion.site/Gra-tify-0bdee8a31c1e41c59b81736c1cef0887?pvs=4)
+🌿[그래티파이 소개 페이지](https://daisy-taste-d2e.notion.site/Gra-tify-0bdee8a31c1e41c59b81736c1cef0887?pvs=4)
